@@ -9,14 +9,14 @@ import (
 	"github.com/phogolabs/cli"
 )
 
-// Job provides a subcommands to project's build
-type Job struct{}
+// Build provides a subcommands to project's build
+type Build struct{}
 
 // CreateCommand creates a cli.Command that can be used by cli.App.
-func (m *Job) CreateCommand() *cli.Command {
+func (m *Build) CreateCommand() *cli.Command {
 	var (
-		list   = &ListJob{}
-		search = &SearchJob{}
+		list   = &ListBuild{}
+		search = &SearchBuild{}
 	)
 
 	commands := []*cli.Command{
@@ -25,27 +25,27 @@ func (m *Job) CreateCommand() *cli.Command {
 	}
 
 	return &cli.Command{
-		Name:        "job",
-		Usage:       "Contains a subset of commands to work with CircleCI Jobs",
-		Description: "Contains a subset of commands to work with CircleCI Jobs",
+		Name:        "build",
+		Usage:       "Contains a subset of commands to work with CircleCI Builds",
+		Description: "Contains a subset of commands to work with CircleCI Builds",
 		Commands:    commands,
 	}
 }
 
-// ListJob provides a subcommands to project's build
-type ListJob struct{}
+// ListBuild provides a subcommands to project's build
+type ListBuild struct{}
 
 // CreateCommand creates a cli.Command that can be used by cli.App.
-func (m *ListJob) CreateCommand() *cli.Command {
+func (m *ListBuild) CreateCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "list",
-		Usage:       "List all recent jobs",
-		Description: "List all recent jobs",
+		Usage:       "List all recent builds",
+		Description: "List all recent builds",
 		Action:      m.list,
 	}
 }
 
-func (m *ListJob) list(ctx *cli.Context) error {
+func (m *ListBuild) list(ctx *cli.Context) error {
 	client := ctx.Metadata["client"].(*circleci.Client)
 
 	builds, err := client.ListRecentBuilds()
@@ -58,11 +58,11 @@ func (m *ListJob) list(ctx *cli.Context) error {
 	return nil
 }
 
-// SearchJob provides a subcommands to project's build
-type SearchJob struct{}
+// SearchBuild provides a subcommands to project's build
+type SearchBuild struct{}
 
 // CreateCommand creates a cli.Command that can be used by cli.App.
-func (m *SearchJob) CreateCommand() *cli.Command {
+func (m *SearchBuild) CreateCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "search",
 		Usage:       "Search for a recent jobs",
@@ -88,6 +88,12 @@ func (m *SearchJob) CreateCommand() *cli.Command {
 				Value:  "master",
 			},
 			&cli.StringFlag{
+				Name:   "job",
+				Usage:  "A job name",
+				EnvVar: "CIRCLE_JOB",
+				Value:  "master",
+			},
+			&cli.StringFlag{
 				Name:   "status",
 				EnvVar: "CIRCLE_STATUS",
 				Usage:  "Restricts which builds are returned",
@@ -101,13 +107,13 @@ func (m *SearchJob) CreateCommand() *cli.Command {
 				Name:   "limit",
 				Usage:  "The number of builds to return. Maximum 100",
 				EnvVar: "CIRCLE_LIMIT",
-				Value:  30,
+				Value:  200,
 			},
 		},
 	}
 }
 
-func (m *SearchJob) search(ctx *cli.Context) error {
+func (m *SearchBuild) search(ctx *cli.Context) error {
 	client := ctx.Metadata["client"].(*circleci.Client)
 
 	query := &circleci.SearchBuildInput{
@@ -115,6 +121,7 @@ func (m *SearchJob) search(ctx *cli.Context) error {
 		Project:  ctx.String("project"),
 		Status:   ctx.String("status"),
 		Branch:   ctx.String("branch"),
+		Job:      ctx.String("job"),
 		Offset:   ctx.Int("offset"),
 		Limit:    ctx.Int("limit"),
 	}

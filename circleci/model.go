@@ -20,7 +20,7 @@ func (e *Error) Error() string {
 type ListArtifactInput struct {
 	Username string `form:"-"`
 	Project  string `form:"-"`
-	Build    string `form:"-"`
+	Build    int    `form:"-"`
 }
 
 // SearchBuildInput definition
@@ -29,6 +29,7 @@ type SearchBuildInput struct {
 	Project  string `form:"-"`
 	Branch   string `form:"branch"`
 	Status   string `form:"filter"`
+	Job      string `form:"-"`
 	Limit    int    `form:"limit"`
 	Offset   int    `form:"offset"`
 }
@@ -75,6 +76,7 @@ type Build struct {
 	VcsURL          string        `json:"vcs_url"`
 	Why             string        `json:"why"`
 	Workflows       Workflow      `json:"workflows" header:"inline"`
+	HasArtifacts    bool          `json:"has_artifacts" header:"has_artifacts"`
 }
 
 // User rerpesent a user that caused that job execution

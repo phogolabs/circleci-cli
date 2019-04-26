@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/go-playground/form"
 )
@@ -32,7 +33,7 @@ func (client *Client) ListArtifacts(query *ListArtifactInput) ([]*Artifact, erro
 			"github",
 			query.Username,
 			query.Project,
-			query.Build,
+			fmt.Sprintf("%v", query.Build),
 			"artifacts")
 	)
 
@@ -115,7 +116,23 @@ func (client *Client) SearchBuilds(query *SearchBuildInput) ([]*Build, error) {
 		return builds, err
 	}
 
+	if query.Job != "" {
+		builds = client.filter(builds, query.Job)
+	}
+
 	return builds, nil
+}
+
+func (client *Client) filter(builds []*Build, job string) []*Build {
+	filtered := []*Build{}
+
+	for _, build := range builds {
+		if strings.EqualFold(build.Workflows.JobName, job) {
+			filtered = append(filtered, build)
+		}
+	}
+
+	return filtered
 }
 
 func (client *Client) do(method, path string, values url.Values, data interface{}) (*http.Response, error) {

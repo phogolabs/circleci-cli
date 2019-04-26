@@ -10,12 +10,12 @@ import (
 
 func main() {
 	var (
-		job      = &cmd.Job{}
+		build    = &cmd.Build{}
 		artifact = &cmd.Artifact{}
 	)
 
 	commands := []*cli.Command{
-		job.CreateCommand(),
+		build.CreateCommand(),
 		artifact.CreateCommand(),
 	}
 
