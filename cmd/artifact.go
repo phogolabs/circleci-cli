@@ -45,16 +45,19 @@ func (m *ListArtifact) CreateCommand() *cli.Command {
 			&cli.StringFlag{
 				Name:     "username",
 				Usage:    "The username or organization name that owns the project",
+				EnvVar:   "CIRCLE_USERNAME",
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:     "project",
 				Usage:    "The project name",
+				EnvVar:   "CIRCLE_PROJECT",
 				Required: true,
 			},
 			&cli.IntFlag{
-				Name:  "build-number",
-				Usage: "A build number",
+				Name:   "build-number",
+				EnvVar: "CIRCLE_BUILD_NUM",
+				Usage:  "A build number",
 			},
 		},
 	}
@@ -98,20 +101,24 @@ func (m *DownloadArtifact) CreateCommand() *cli.Command {
 			&cli.StringFlag{
 				Name:     "username",
 				Usage:    "The username or organization name that owns the project",
+				EnvVar:   "CIRCLE_USERNAME",
 				Required: true,
 			},
 			&cli.StringFlag{
 				Name:     "project",
 				Usage:    "The project name",
+				EnvVar:   "CIRCLE_PROJECT",
 				Required: true,
 			},
 			&cli.IntFlag{
-				Name:  "build-number",
-				Usage: "A build number",
+				Name:   "build-number",
+				Usage:  "A build number",
+				EnvVar: "CIRCLE_BUILD_NUM",
 			},
 			&cli.StringFlag{
 				Name:     "directory",
 				Usage:    "Directory where to store the artifacts",
+				EnvVar:   "CIRCLE_ARTIFACT_DIR",
 				Value:    ".",
 				Required: true,
 			},
