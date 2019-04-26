@@ -86,7 +86,7 @@ func (m *SearchJob) CreateCommand() *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:  "status",
-				Usage: "Restricts which builds are returned. Set to 'completed', 'successful', 'failed', 'running', or defaults to no filter.",
+				Usage: "Restricts which builds are returned",
 			},
 			&cli.IntFlag{
 				Name:  "offset",
@@ -104,7 +104,7 @@ func (m *SearchJob) CreateCommand() *cli.Command {
 func (m *SearchJob) search(ctx *cli.Context) error {
 	client := ctx.Metadata["client"].(*circleci.Client)
 
-	query := &circleci.Query{
+	query := &circleci.SearchBuildInput{
 		Username: ctx.String("username"),
 		Project:  ctx.String("project"),
 		Status:   ctx.String("status"),
@@ -123,7 +123,7 @@ func (m *SearchJob) search(ctx *cli.Context) error {
 	return nil
 }
 
-// NewPritner creates a new printer
+// NewPrinter creates a new printer
 func NewPrinter(writer io.Writer) *tableprinter.Printer {
 	printer := tableprinter.New(writer)
 	printer.HeaderBgColor = tablewriter.BgBlackColor

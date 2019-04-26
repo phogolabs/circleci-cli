@@ -16,14 +16,29 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("%d: %s", e.HTTPStatusCode, e.Message)
 }
 
-// Query definition
-type Query struct {
+// ListArtifactInput definition
+type ListArtifactInput struct {
+	Username string `form:"-"`
+	Project  string `form:"-"`
+	Build    string `form:"-"`
+}
+
+// SearchBuildInput definition
+type SearchBuildInput struct {
 	Username string `form:"-"`
 	Project  string `form:"-"`
 	Branch   string `form:"branch"`
 	Status   string `form:"filter"`
 	Limit    int    `form:"limit"`
 	Offset   int    `form:"offset"`
+}
+
+// Artifact represents an artifact
+type Artifact struct {
+	Path       string `json:"path"`
+	PrettyPath string `json:"pretty_path" header:"path"`
+	NodeIndex  int    `json:"node_index"`
+	URL        string `json:"url" header:"url"`
 }
 
 // Build represents a build
