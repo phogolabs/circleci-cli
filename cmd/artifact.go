@@ -131,6 +131,11 @@ func (m *Artifact) download(ctx *cli.Context) error {
 }
 
 func (m *Artifact) find(ctx *cli.Context) (int, error) {
+	fmt.Fprintf(ctx.Writer, "Searching for builds %s/%s/%s\n",
+		ctx.String("username"),
+		ctx.String("project"),
+		ctx.String("job"))
+
 	client := ctx.Metadata["client"].(*circleci.Client)
 
 	query := &circleci.SearchBuildInput{

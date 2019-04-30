@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 
 	"github.com/kataras/tablewriter"
@@ -15,13 +16,11 @@ type Build struct{}
 // CreateCommand creates a cli.Command that can be used by cli.App.
 func (m *Build) CreateCommand() *cli.Command {
 	var (
-		list   = &ListBuild{}
-		search = &SearchBuild{}
+		list = &ListBuild{}
 	)
 
 	commands := []*cli.Command{
 		list.CreateCommand(),
-		search.CreateCommand(),
 	}
 
 	return &cli.Command{
@@ -39,35 +38,9 @@ type ListBuild struct{}
 func (m *ListBuild) CreateCommand() *cli.Command {
 	return &cli.Command{
 		Name:        "list",
-		Usage:       "List all recent builds",
-		Description: "List all recent builds",
-		Action:      m.list,
-	}
-}
-
-func (m *ListBuild) list(ctx *cli.Context) error {
-	client := ctx.Metadata["client"].(*circleci.Client)
-
-	builds, err := client.ListRecentBuilds()
-	if err != nil {
-		return err
-	}
-
-	printer := NewPrinter(ctx.Writer)
-	printer.Print(builds)
-	return nil
-}
-
-// SearchBuild provides a subcommands to project's build
-type SearchBuild struct{}
-
-// CreateCommand creates a cli.Command that can be used by cli.App.
-func (m *SearchBuild) CreateCommand() *cli.Command {
-	return &cli.Command{
-		Name:        "search",
-		Usage:       "Search for a recent jobs",
-		Description: "Search for a recent jobs",
-		Action:      m.search,
+		Usage:       "List for a recent jobs",
+		Description: "List for a recent jobs",
+		Action:      m.find,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "username",
@@ -113,7 +86,12 @@ func (m *SearchBuild) CreateCommand() *cli.Command {
 	}
 }
 
-func (m *SearchBuild) search(ctx *cli.Context) error {
+func (m *ListBuild) find(ctx *cli.Context) error {
+	fmt.Fprintf(ctx.Writer, "Searching for builds %s/%s/%s\n",
+		ctx.String("username"),
+		ctx.String("project"),
+		ctx.String("job"))
+
 	client := ctx.Metadata["client"].(*circleci.Client)
 
 	query := &circleci.SearchBuildInput{

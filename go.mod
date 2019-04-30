@@ -9,4 +9,5 @@ require (
 	github.com/landoop/tableprinter v0.0.0-20180806200924-8bd8c2576d27
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/phogolabs/cli v0.0.0-20190426141531-9063456db188
+	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )
